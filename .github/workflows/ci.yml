@@ -43,4 +43,4 @@ jobs:
             ${{ runner.os }}-cargo-
 
       - name: Build library
-        run: cargo build fuel-core-protobuf --all --release
+        run: cargo build --manifest-path fuel-core-protobuf/Cargo.toml --all --release
