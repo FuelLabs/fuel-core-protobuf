@@ -1,5 +1,15 @@
 name: CI
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [ opened, synchronize, reopened, labeled, unlabeled ]
+  release:
+    types: [ published ]
+
 env:
   RUST_VERSION: 1.90.0
   RUSTFLAGS: -D warnings
