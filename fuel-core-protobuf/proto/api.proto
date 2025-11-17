@@ -13,11 +13,23 @@ message BlockRangeRequest {
   uint32 end = 2;
 }
 
-message RemoteBlockRangeResponse {
-  string region = 1;
-  string bucket = 2;
-  string key = 3;
-  string url = 4;
+message RemoteBlockResponse {
+  string path = 1;
+  oneof config {
+    RemoteBlockConfigHTTP http = 2;
+    RemoteBlockConfigS3 s3 = 3;
+  }
+}
+
+message RemoteBlockConfigS3 {
+  string bucket = 1;
+  bool requester_pays = 2;
+  optional string endpoint = 3;
+}
+
+message RemoteBlockConfigHTTP {
+  string endpoint = 1;
+  map<string, string> headers = 2;
 }
 
 message Block {
@@ -399,7 +411,7 @@ message InnerPredicateOffset {
 message BlockResponse {
   oneof payload {
     Block literal = 1;
-    RemoteBlockRangeResponse remote = 2;
+    RemoteBlockResponse remote = 2;
   }
 }
 
