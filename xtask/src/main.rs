@@ -1,11 +1,11 @@
 use std::{
-    env,
     error::Error,
-    process::{exit, Command},
+    path::PathBuf,
+    process::exit,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut args = env::args().skip(1);
+    let mut args = std::env::args().skip(1);
     let Some(cmd) = args.next() else {
         print_usage();
         exit(1);
@@ -21,20 +21,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn regen_protos() -> Result<(), Box<dyn Error>> {
-    let status = Command::new("cargo")
-        .env("PROTO_REGENERATE", "1")
-        .args([
-            "build",
-            "--manifest-path",
-            "fuel-core-protobuf/Cargo.toml",
-            "--package",
-            "fuel-core-protobuf",
-        ])
-        .status()?;
+    let crate_dir = PathBuf::from("fuel-core-protobuf");
+    let proto_dir = crate_dir.join("proto");
+    let out_dir = crate_dir.join("src").join("generated");
+    std::fs::create_dir_all(&out_dir)?;
 
-    if !status.success() {
-        return Err("cargo build failed while regenerating protos".into());
-    }
+    println!("Regenerating protobufs into {}", out_dir.display());
+
+    tonic_prost_build::configure()
+        .type_attribute(".", "#[derive(serde::Serialize,serde::Deserialize)]")
+        .type_attribute(".", "#[allow(clippy::large_enum_variant)]")
+        .out_dir(out_dir)
+        .compile_protos(&[proto_dir.join("api.proto")], &[proto_dir])?;
 
     Ok(())
 }

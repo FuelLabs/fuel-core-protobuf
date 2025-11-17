@@ -13,3 +13,6 @@ git diff src/generated/blockaggregator.rs
 ```
 
 Then check in any changes to the `src/generated` directory.
+
+Note: the library build itself never invokes `protoc`; regeneration only
+occurs via the `xtask` command (and CI).
