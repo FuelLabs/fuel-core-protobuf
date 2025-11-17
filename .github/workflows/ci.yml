@@ -49,3 +49,10 @@ jobs:
         run: |
           cargo xtask regen-protos
           git diff --exit-code fuel-core-protobuf/src/generated/blockaggregator.rs
+
+      - name: Publish crate check
+        uses: FuelLabs/publish-crates@v1
+        with:
+          dry-run: true
+          check-repo: false
+          ignore-unpublished-changes: true
