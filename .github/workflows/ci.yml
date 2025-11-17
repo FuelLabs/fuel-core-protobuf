@@ -44,3 +44,8 @@ jobs:
 
       - name: Build library
         run: cargo build --manifest-path fuel-core-protobuf/Cargo.toml --all --release
+
+      - name: Verify generated protobufs are up to date
+        run: |
+          cargo xtask regen-protos
+          git diff --exit-code fuel-core-protobuf/src/generated/blockaggregator.rs

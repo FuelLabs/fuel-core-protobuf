@@ -1,1 +1,3 @@
-tonic::include_proto!("blockaggregator");
+pub mod blockaggregator {
+    include!("generated/blockaggregator.rs");
+}
