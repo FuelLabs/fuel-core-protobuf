@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [ opened, synchronize, reopened, labeled, unlabeled ]
+  release:
+    types: [ published ]
+
+env:
+  RUST_VERSION: 1.90.0
+  RUSTFLAGS: -D warnings
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          components: "clippy"
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+
+      - name: Cache cargo directories
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build library
+        run: cargo build --manifest-path fuel-core-protobuf/Cargo.toml --all --release
+
+      - name: Verify generated protobufs are up to date
+        run: |
+          cargo xtask regen-protos
+          git diff --exit-code fuel-core-protobuf/src/generated/blockaggregator.rs
+
+      - name: Publish crate check
+        uses: FuelLabs/publish-crates@v1
+        with:
+          path: ./fuel-core-protobuf
+          dry-run: true
+          check-repo: false
+          ignore-unpublished-changes: true
