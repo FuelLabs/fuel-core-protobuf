@@ -18,6 +18,7 @@ message RemoteBlockRangeResponse {
   string bucket = 2;
   string key = 3;
   string url = 4;
+  string lolz = 5;
 }
 
 message Block {
