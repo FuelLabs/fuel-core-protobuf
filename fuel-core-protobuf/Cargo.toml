@@ -1,6 +1,10 @@
 [package]
+authors = ["Fuel Labs <contact@fuel.sh>"]
 name = "fuel-core-protobuf"
-version = "0.1.0"
+description = "Protobuf definitions for Fuel Core components"
+keywords = ["fuel", "fuel-core", "protobuf", "vm"]
+repository = "https://github.com/FuelLabs/fuel-core-protobuf"
+version = "0.2.0"
 edition = "2024"
 license = "BUSL-1.1"
 
