@@ -53,6 +53,7 @@ jobs:
       - name: Publish crate check
         uses: FuelLabs/publish-crates@v1
         with:
+          path: ./fuel-core-protobuf
           dry-run: true
           check-repo: false
           ignore-unpublished-changes: true
