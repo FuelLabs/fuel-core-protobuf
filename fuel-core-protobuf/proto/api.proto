@@ -14,10 +14,9 @@ message BlockRangeRequest {
 }
 
 message RemoteBlockResponse {
-  string path = 1;
   oneof location {
-    RemoteHTTPEndpoint http = 2;
-    RemoteS3Bucket s3 = 3;
+    RemoteHTTPEndpoint http = 1;
+    RemoteS3Bucket s3 = 2;
   }
 }
 
