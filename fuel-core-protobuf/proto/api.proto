@@ -409,16 +409,17 @@ message InnerPredicateOffset {
 
 
 message BlockResponse {
+  uint32 height = 1;
   oneof payload {
-    Block literal = 1;
-    RemoteBlockResponse remote = 2;
+    Block literal = 2;
+    RemoteBlockResponse remote = 3;
   }
 }
 
 message NewBlockSubscriptionRequest {}
 
 service BlockAggregator {
-  rpc GetBlockHeight (BlockHeightRequest) returns (BlockHeightResponse);
+  rpc GetSyncedBlockHeight (BlockHeightRequest) returns (BlockHeightResponse);
   rpc GetBlockRange (BlockRangeRequest) returns (stream BlockResponse);
   rpc NewBlockSubscription (NewBlockSubscriptionRequest) returns (stream BlockResponse);
 }
