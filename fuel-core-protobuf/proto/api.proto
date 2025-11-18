@@ -22,8 +22,9 @@ message RemoteBlockResponse {
 
 message RemoteS3Bucket {
   string bucket = 1;
-  bool requester_pays = 2;
-  optional string endpoint = 3;
+  string key = 2;
+  bool requester_pays = 3;
+  optional string endpoint = 4;
 }
 
 message RemoteHTTPEndpoint {

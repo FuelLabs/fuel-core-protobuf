@@ -23,9 +23,7 @@ pub struct BlockRangeRequest {
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoteBlockResponse {
-    #[prost(string, tag = "1")]
-    pub path: ::prost::alloc::string::String,
-    #[prost(oneof = "remote_block_response::Location", tags = "2, 3")]
+    #[prost(oneof = "remote_block_response::Location", tags = "1, 2")]
     pub location: ::core::option::Option<remote_block_response::Location>,
 }
 /// Nested message and enum types in `RemoteBlockResponse`.
@@ -34,9 +32,9 @@ pub mod remote_block_response {
     #[allow(clippy::large_enum_variant)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Location {
-        #[prost(message, tag = "2")]
+        #[prost(message, tag = "1")]
         Http(super::RemoteHttpEndpoint),
-        #[prost(message, tag = "3")]
+        #[prost(message, tag = "2")]
         S3(super::RemoteS3Bucket),
     }
 }
