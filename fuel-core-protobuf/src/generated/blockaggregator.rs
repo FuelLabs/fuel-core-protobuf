@@ -21,16 +21,47 @@ pub struct BlockRangeRequest {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct RemoteBlockRangeResponse {
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RemoteBlockResponse {
     #[prost(string, tag = "1")]
-    pub region: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
+    pub path: ::prost::alloc::string::String,
+    #[prost(oneof = "remote_block_response::Config", tags = "2, 3")]
+    pub config: ::core::option::Option<remote_block_response::Config>,
+}
+/// Nested message and enum types in `RemoteBlockResponse`.
+pub mod remote_block_response {
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[allow(clippy::large_enum_variant)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Config {
+        #[prost(message, tag = "2")]
+        Http(super::RemoteBlockConfigHttp),
+        #[prost(message, tag = "3")]
+        S3(super::RemoteBlockConfigS3),
+    }
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RemoteBlockConfigS3 {
+    #[prost(string, tag = "1")]
     pub bucket: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    pub key: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(bool, tag = "2")]
+    pub requester_pays: bool,
+    #[prost(string, optional, tag = "3")]
+    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RemoteBlockConfigHttp {
+    #[prost(string, tag = "1")]
+    pub endpoint: ::prost::alloc::string::String,
+    #[prost(map = "string, string", tag = "2")]
+    pub headers: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
@@ -808,7 +839,7 @@ pub mod block_response {
         #[prost(message, tag = "1")]
         Literal(super::Block),
         #[prost(message, tag = "2")]
-        Remote(super::RemoteBlockRangeResponse),
+        Remote(super::RemoteBlockResponse),
     }
 }
 #[derive(serde::Serialize, serde::Deserialize)]
