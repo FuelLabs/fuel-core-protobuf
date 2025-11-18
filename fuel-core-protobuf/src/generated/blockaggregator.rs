@@ -44,9 +44,11 @@ pub mod remote_block_response {
 pub struct RemoteS3Bucket {
     #[prost(string, tag = "1")]
     pub bucket: ::prost::alloc::string::String,
-    #[prost(bool, tag = "2")]
+    #[prost(string, tag = "2")]
+    pub key: ::prost::alloc::string::String,
+    #[prost(bool, tag = "3")]
     pub requester_pays: bool,
-    #[prost(string, optional, tag = "3")]
+    #[prost(string, optional, tag = "4")]
     pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
