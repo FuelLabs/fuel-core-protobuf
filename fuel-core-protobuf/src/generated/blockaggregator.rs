@@ -25,25 +25,25 @@ pub struct BlockRangeRequest {
 pub struct RemoteBlockResponse {
     #[prost(string, tag = "1")]
     pub path: ::prost::alloc::string::String,
-    #[prost(oneof = "remote_block_response::Config", tags = "2, 3")]
-    pub config: ::core::option::Option<remote_block_response::Config>,
+    #[prost(oneof = "remote_block_response::Location", tags = "2, 3")]
+    pub location: ::core::option::Option<remote_block_response::Location>,
 }
 /// Nested message and enum types in `RemoteBlockResponse`.
 pub mod remote_block_response {
     #[derive(serde::Serialize, serde::Deserialize)]
     #[allow(clippy::large_enum_variant)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Config {
+    pub enum Location {
         #[prost(message, tag = "2")]
-        Http(super::RemoteBlockConfigHttp),
+        Http(super::RemoteHttpEndpoint),
         #[prost(message, tag = "3")]
-        S3(super::RemoteBlockConfigS3),
+        S3(super::RemoteS3Bucket),
     }
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct RemoteBlockConfigS3 {
+pub struct RemoteS3Bucket {
     #[prost(string, tag = "1")]
     pub bucket: ::prost::alloc::string::String,
     #[prost(bool, tag = "2")]
@@ -54,7 +54,7 @@ pub struct RemoteBlockConfigS3 {
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RemoteBlockConfigHttp {
+pub struct RemoteHttpEndpoint {
     #[prost(string, tag = "1")]
     pub endpoint: ::prost::alloc::string::String,
     #[prost(map = "string, string", tag = "2")]
