@@ -21,16 +21,47 @@ pub struct BlockRangeRequest {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RemoteBlockResponse {
+    #[prost(oneof = "remote_block_response::Location", tags = "1, 2")]
+    pub location: ::core::option::Option<remote_block_response::Location>,
+}
+/// Nested message and enum types in `RemoteBlockResponse`.
+pub mod remote_block_response {
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[allow(clippy::large_enum_variant)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Location {
+        #[prost(message, tag = "1")]
+        Http(super::RemoteHttpEndpoint),
+        #[prost(message, tag = "2")]
+        S3(super::RemoteS3Bucket),
+    }
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct RemoteBlockRangeResponse {
+pub struct RemoteS3Bucket {
     #[prost(string, tag = "1")]
-    pub region: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
     pub bucket: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
+    #[prost(string, tag = "2")]
     pub key: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    pub url: ::prost::alloc::string::String,
+    #[prost(bool, tag = "3")]
+    pub requester_pays: bool,
+    #[prost(string, optional, tag = "4")]
+    pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RemoteHttpEndpoint {
+    #[prost(string, tag = "1")]
+    pub endpoint: ::prost::alloc::string::String,
+    #[prost(map = "string, string", tag = "2")]
+    pub headers: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
@@ -796,7 +827,9 @@ pub struct InnerPredicateOffset {
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockResponse {
-    #[prost(oneof = "block_response::Payload", tags = "1, 2")]
+    #[prost(uint32, tag = "1")]
+    pub height: u32,
+    #[prost(oneof = "block_response::Payload", tags = "2, 3")]
     pub payload: ::core::option::Option<block_response::Payload>,
 }
 /// Nested message and enum types in `BlockResponse`.
@@ -805,10 +838,10 @@ pub mod block_response {
     #[allow(clippy::large_enum_variant)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Payload {
-        #[prost(message, tag = "1")]
-        Literal(super::Block),
         #[prost(message, tag = "2")]
-        Remote(super::RemoteBlockRangeResponse),
+        Literal(super::Block),
+        #[prost(message, tag = "3")]
+        Remote(super::RemoteBlockResponse),
     }
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -906,7 +939,7 @@ pub mod block_aggregator_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        pub async fn get_block_height(
+        pub async fn get_synced_block_height(
             &mut self,
             request: impl tonic::IntoRequest<super::BlockHeightRequest>,
         ) -> std::result::Result<
@@ -923,12 +956,15 @@ pub mod block_aggregator_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/blockaggregator.BlockAggregator/GetBlockHeight",
+                "/blockaggregator.BlockAggregator/GetSyncedBlockHeight",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
-                    GrpcMethod::new("blockaggregator.BlockAggregator", "GetBlockHeight"),
+                    GrpcMethod::new(
+                        "blockaggregator.BlockAggregator",
+                        "GetSyncedBlockHeight",
+                    ),
                 );
             self.inner.unary(req, path, codec).await
         }
@@ -1002,7 +1038,7 @@ pub mod block_aggregator_server {
     /// Generated trait containing gRPC methods that should be implemented for use with BlockAggregatorServer.
     #[async_trait]
     pub trait BlockAggregator: std::marker::Send + std::marker::Sync + 'static {
-        async fn get_block_height(
+        async fn get_synced_block_height(
             &self,
             request: tonic::Request<super::BlockHeightRequest>,
         ) -> std::result::Result<
@@ -1112,13 +1148,13 @@ pub mod block_aggregator_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/blockaggregator.BlockAggregator/GetBlockHeight" => {
+                "/blockaggregator.BlockAggregator/GetSyncedBlockHeight" => {
                     #[allow(non_camel_case_types)]
-                    struct GetBlockHeightSvc<T: BlockAggregator>(pub Arc<T>);
+                    struct GetSyncedBlockHeightSvc<T: BlockAggregator>(pub Arc<T>);
                     impl<
                         T: BlockAggregator,
                     > tonic::server::UnaryService<super::BlockHeightRequest>
-                    for GetBlockHeightSvc<T> {
+                    for GetSyncedBlockHeightSvc<T> {
                         type Response = super::BlockHeightResponse;
                         type Future = BoxFuture<
                             tonic::Response<Self::Response>,
@@ -1130,7 +1166,10 @@ pub mod block_aggregator_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as BlockAggregator>::get_block_height(&inner, request)
+                                <T as BlockAggregator>::get_synced_block_height(
+                                        &inner,
+                                        request,
+                                    )
                                     .await
                             };
                             Box::pin(fut)
@@ -1142,7 +1181,7 @@ pub mod block_aggregator_server {
                     let max_encoding_message_size = self.max_encoding_message_size;
                     let inner = self.inner.clone();
                     let fut = async move {
-                        let method = GetBlockHeightSvc(inner);
+                        let method = GetSyncedBlockHeightSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

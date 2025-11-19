@@ -13,11 +13,23 @@ message BlockRangeRequest {
   uint32 end = 2;
 }
 
-message RemoteBlockRangeResponse {
-  string region = 1;
-  string bucket = 2;
-  string key = 3;
-  string url = 4;
+message RemoteBlockResponse {
+  oneof location {
+    RemoteHTTPEndpoint http = 1;
+    RemoteS3Bucket s3 = 2;
+  }
+}
+
+message RemoteS3Bucket {
+  string bucket = 1;
+  string key = 2;
+  bool requester_pays = 3;
+  optional string endpoint = 4;
+}
+
+message RemoteHTTPEndpoint {
+  string endpoint = 1;
+  map<string, string> headers = 2;
 }
 
 message Block {
@@ -397,16 +409,17 @@ message InnerPredicateOffset {
 
 
 message BlockResponse {
+  uint32 height = 1;
   oneof payload {
-    Block literal = 1;
-    RemoteBlockRangeResponse remote = 2;
+    Block literal = 2;
+    RemoteBlockResponse remote = 3;
   }
 }
 
 message NewBlockSubscriptionRequest {}
 
 service BlockAggregator {
-  rpc GetBlockHeight (BlockHeightRequest) returns (BlockHeightResponse);
+  rpc GetSyncedBlockHeight (BlockHeightRequest) returns (BlockHeightResponse);
   rpc GetBlockRange (BlockRangeRequest) returns (stream BlockResponse);
   rpc NewBlockSubscription (NewBlockSubscriptionRequest) returns (stream BlockResponse);
 }
