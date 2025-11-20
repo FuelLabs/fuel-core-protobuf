@@ -88,6 +88,8 @@ pub struct V1Block {
     pub header: ::core::option::Option<Header>,
     #[prost(message, repeated, tag = "2")]
     pub transactions: ::prost::alloc::vec::Vec<Transaction>,
+    #[prost(message, repeated, tag = "3")]
+    pub receipts: ::prost::alloc::vec::Vec<Receipt>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
@@ -823,6 +825,483 @@ pub struct InnerPredicateOffset {
     #[prost(uint32, tag = "2")]
     pub length: u32,
 }
+/// pub enum Receipt {
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Receipt {
+    #[prost(
+        oneof = "receipt::Variant",
+        tags = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13"
+    )]
+    pub variant: ::core::option::Option<receipt::Variant>,
+}
+/// Nested message and enum types in `Receipt`.
+pub mod receipt {
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[allow(clippy::large_enum_variant)]
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Variant {
+        #[prost(message, tag = "1")]
+        Call(super::CallReceipt),
+        #[prost(message, tag = "2")]
+        ReturnReceipt(super::ReturnReceipt),
+        #[prost(message, tag = "3")]
+        ReturnData(super::ReturnDataReceipt),
+        #[prost(message, tag = "4")]
+        Panic(super::PanicReceipt),
+        #[prost(message, tag = "5")]
+        Revert(super::RevertReceipt),
+        #[prost(message, tag = "6")]
+        Log(super::LogReceipt),
+        #[prost(message, tag = "7")]
+        LogData(super::LogDataReceipt),
+        #[prost(message, tag = "8")]
+        Transfer(super::TransferReceipt),
+        #[prost(message, tag = "9")]
+        TransferOut(super::TransferOutReceipt),
+        #[prost(message, tag = "10")]
+        ScriptResult(super::ScriptResultReceipt),
+        #[prost(message, tag = "11")]
+        MessageOut(super::MessageOutReceipt),
+        #[prost(message, tag = "12")]
+        Mint(super::MintReceipt),
+        #[prost(message, tag = "13")]
+        Burn(super::BurnReceipt),
+    }
+}
+///
+/// ```text
+/// Call {
+///     id: ContractId,
+///     to: ContractId,
+///     amount: Word,
+///     asset_id: AssetId,
+///     gas: Word,
+///     param1: Word,
+///     param2: Word,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CallReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub to: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub amount: u64,
+    #[prost(bytes = "vec", tag = "4")]
+    pub asset_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub gas: u64,
+    #[prost(uint64, tag = "6")]
+    pub param1: u64,
+    #[prost(uint64, tag = "7")]
+    pub param2: u64,
+    #[prost(uint64, tag = "8")]
+    pub pc: u64,
+    #[prost(uint64, tag = "9")]
+    pub is: u64,
+}
+///
+/// ```text
+/// Return {
+///     id: ContractId,
+///     val: Word,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReturnReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub val: u64,
+    #[prost(uint64, tag = "3")]
+    pub pc: u64,
+    #[prost(uint64, tag = "4")]
+    pub is: u64,
+}
+///
+/// ```text
+/// ReturnData {
+///     id: ContractId,
+///     ptr: Word,
+///     len: Word,
+///     digest: Bytes32,
+///     pc: Word,
+///     is: Word,
+///     #\[educe(PartialEq(ignore))\]
+///     #\[educe(Hash(ignore))\]
+///     #\[canonical(skip)\]
+///     data: Option<Bytes>,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReturnDataReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub ptr: u64,
+    #[prost(uint64, tag = "3")]
+    pub len: u64,
+    #[prost(bytes = "vec", tag = "4")]
+    pub digest: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub pc: u64,
+    #[prost(uint64, tag = "6")]
+    pub is: u64,
+    #[prost(bytes = "vec", optional, tag = "7")]
+    pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+///
+/// ```text
+/// Panic {
+///     id: ContractId,
+///     reason: PanicInstruction,
+///     pc: Word,
+///     is: Word,
+///     #\[educe(PartialEq(ignore))\]
+///     #\[educe(Hash(ignore))\]
+///     #\[canonical(skip)\]
+///     contract_id: Option<ContractId>,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PanicReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "2")]
+    pub reason: ::core::option::Option<PanicInstruction>,
+    #[prost(uint64, tag = "3")]
+    pub pc: u64,
+    #[prost(uint64, tag = "4")]
+    pub is: u64,
+    #[prost(bytes = "vec", optional, tag = "5")]
+    pub contract_id: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+///
+/// ```text
+/// Revert {
+///     id: ContractId,
+///     ra: Word,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RevertReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub ra: u64,
+    #[prost(uint64, tag = "3")]
+    pub pc: u64,
+    #[prost(uint64, tag = "4")]
+    pub is: u64,
+}
+///
+/// ```text
+/// Log {
+///     id: ContractId,
+///     ra: Word,
+///     rb: Word,
+///     rc: Word,
+///     rd: Word,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LogReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub ra: u64,
+    #[prost(uint64, tag = "3")]
+    pub rb: u64,
+    #[prost(uint64, tag = "4")]
+    pub rc: u64,
+    #[prost(uint64, tag = "5")]
+    pub rd: u64,
+    #[prost(uint64, tag = "6")]
+    pub pc: u64,
+    #[prost(uint64, tag = "7")]
+    pub is: u64,
+}
+///
+/// ```text
+/// LogData {
+///     id: ContractId,
+///     ra: Word,
+///     rb: Word,
+///     ptr: Word,
+///     len: Word,
+///     digest: Bytes32,
+///     pc: Word,
+///     is: Word,
+///     #\[educe(PartialEq(ignore))\]
+///     #\[educe(Hash(ignore))\]
+///     #\[canonical(skip)\]
+///     data: Option<Bytes>,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LogDataReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub ra: u64,
+    #[prost(uint64, tag = "3")]
+    pub rb: u64,
+    #[prost(uint64, tag = "4")]
+    pub ptr: u64,
+    #[prost(uint64, tag = "5")]
+    pub len: u64,
+    #[prost(bytes = "vec", tag = "6")]
+    pub digest: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "7")]
+    pub pc: u64,
+    #[prost(uint64, tag = "8")]
+    pub is: u64,
+    #[prost(bytes = "vec", optional, tag = "9")]
+    pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+///
+/// ```text
+/// Transfer {
+///     id: ContractId,
+///     to: ContractId,
+///     amount: Word,
+///     asset_id: AssetId,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TransferReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub to: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub amount: u64,
+    #[prost(bytes = "vec", tag = "4")]
+    pub asset_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub pc: u64,
+    #[prost(uint64, tag = "6")]
+    pub is: u64,
+}
+///
+/// ```text
+/// TransferOut {
+///     id: ContractId,
+///     to: Address,
+///     amount: Word,
+///     asset_id: AssetId,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TransferOutReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub to: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub amount: u64,
+    #[prost(bytes = "vec", tag = "4")]
+    pub asset_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub pc: u64,
+    #[prost(uint64, tag = "6")]
+    pub is: u64,
+}
+///
+/// ```text
+/// ScriptResult {
+///     result: ScriptExecutionResult,
+///     gas_used: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ScriptResultReceipt {
+    #[prost(message, optional, tag = "1")]
+    pub result: ::core::option::Option<ScriptExecutionResult>,
+    #[prost(uint64, tag = "2")]
+    pub gas_used: u64,
+}
+///
+/// ```text
+/// MessageOut {
+///     sender: Address,
+///     recipient: Address,
+///     amount: Word,
+///     nonce: Nonce,
+///     len: Word,
+///     digest: Bytes32,
+///     #\[educe(PartialEq(ignore))\]
+///     #\[educe(Hash(ignore))\]
+///     #\[canonical(skip)\]
+///     data: Option<Bytes>,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MessageOutReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub sender: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub recipient: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub amount: u64,
+    #[prost(bytes = "vec", tag = "4")]
+    pub nonce: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub len: u64,
+    #[prost(bytes = "vec", tag = "6")]
+    pub digest: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", optional, tag = "7")]
+    pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+}
+///
+/// ```text
+/// Mint {
+///     sub_id: SubAssetId,
+///     contract_id: ContractId,
+///     val: Word,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MintReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub sub_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub contract_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub val: u64,
+    #[prost(uint64, tag = "4")]
+    pub pc: u64,
+    #[prost(uint64, tag = "5")]
+    pub is: u64,
+}
+///
+/// ```text
+/// Burn {
+///     sub_id: SubAssetId,
+///     contract_id: ContractId,
+///     val: Word,
+///     pc: Word,
+///     is: Word,
+/// },
+/// ```
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BurnReceipt {
+    #[prost(bytes = "vec", tag = "1")]
+    pub sub_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub contract_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub val: u64,
+    #[prost(uint64, tag = "4")]
+    pub pc: u64,
+    #[prost(uint64, tag = "5")]
+    pub is: u64,
+}
+/// pub struct PanicInstruction {
+/// reason: PanicReason,
+/// instruction: RawInstruction,
+/// }
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PanicInstruction {
+    #[prost(enumeration = "PanicReason", tag = "1")]
+    pub reason: i32,
+    #[prost(uint32, tag = "2")]
+    pub instruction: u32,
+}
+/// pub enum ScriptExecutionResult {
+/// Success,
+/// Revert,
+/// Panic,
+/// GenericFailure(u64),
+/// }
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ScriptExecutionResult {
+    #[prost(oneof = "script_execution_result::Variant", tags = "1, 2, 3, 4")]
+    pub variant: ::core::option::Option<script_execution_result::Variant>,
+}
+/// Nested message and enum types in `ScriptExecutionResult`.
+pub mod script_execution_result {
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[allow(clippy::large_enum_variant)]
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Variant {
+        #[prost(message, tag = "1")]
+        Success(super::ScriptExecutionResultSuccess),
+        #[prost(message, tag = "2")]
+        Revert(super::ScriptExecutionResultRevert),
+        #[prost(message, tag = "3")]
+        Panic(super::ScriptExecutionResultPanic),
+        #[prost(message, tag = "4")]
+        GenericFailure(super::ScriptExecutionResultGenericFailure),
+    }
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ScriptExecutionResultSuccess {}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ScriptExecutionResultRevert {}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ScriptExecutionResultPanic {}
+/// ScriptExecutionResult::GenericFailure(u64)
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ScriptExecutionResultGenericFailure {
+    #[prost(uint64, tag = "1")]
+    pub code: u64,
+}
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -848,6 +1327,295 @@ pub mod block_response {
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct NewBlockSubscriptionRequest {}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PanicReason {
+    Unknown = 0,
+    Revert = 1,
+    OutOfGas = 2,
+    TransactionValidity = 3,
+    MemoryOverflow = 4,
+    ArithmeticOverflow = 5,
+    ContractNotFound = 6,
+    MemoryOwnership = 7,
+    NotEnoughBalance = 8,
+    ExpectedInternalContext = 9,
+    AssetIdNotFound = 10,
+    InputNotFound = 11,
+    OutputNotFound = 12,
+    WitnessNotFound = 13,
+    TransactionMaturity = 14,
+    InvalidMetadataIdentifier = 15,
+    MalformedCallStructure = 16,
+    ReservedRegisterNotWritable = 17,
+    InvalidFlags = 18,
+    InvalidImmediateValue = 19,
+    ExpectedCoinInput = 20,
+    EcalError = 21,
+    MemoryWriteOverlap = 22,
+    ContractNotInInputs = 23,
+    InternalBalanceOverflow = 24,
+    ContractMaxSize = 25,
+    ExpectedUnallocatedStack = 26,
+    MaxStaticContractsReached = 27,
+    TransferAmountCannotBeZero = 28,
+    ExpectedOutputVariable = 29,
+    ExpectedParentInternalContext = 30,
+    PredicateReturnedNonOne = 31,
+    ContractIdAlreadyDeployed = 32,
+    ContractMismatch = 33,
+    MessageDataTooLong = 34,
+    ArithmeticError = 35,
+    ContractInstructionNotAllowed = 36,
+    TransferZeroCoins = 37,
+    InvalidInstruction = 38,
+    MemoryNotExecutable = 39,
+    PolicyIsNotSet = 40,
+    PolicyNotFound = 41,
+    TooManyReceipts = 42,
+    BalanceOverflow = 43,
+    InvalidBlockHeight = 44,
+    TooManySlots = 45,
+    ExpectedNestedCaller = 46,
+    MemoryGrowthOverlap = 47,
+    UninitalizedMemoryAccess = 48,
+    OverridingConsensusParameters = 49,
+    UnknownStateTransactionBytecodeRoot = 50,
+    OverridingStateTransactionBytecode = 51,
+    BytecodeAlreadyUploaded = 52,
+    ThePartIsNotSequentiallyConnected = 53,
+    BlobNotFound = 54,
+    BlobIdAlreadyUploaded = 55,
+    GasCostNotDefined = 56,
+    UnsupportedCurveId = 57,
+    UnsupportedOperationType = 58,
+    InvalidEllipticCurvePoint = 59,
+    InputContractDoesNotExist = 60,
+    StorageSlotsNotFound = 61,
+    ProofInUploadNotFound = 62,
+    InvalidUpgradePurposeType = 63,
+    CanNotGetGasPriceInPredicate = 64,
+}
+impl PanicReason {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unknown => "PANIC_REASON_UNKNOWN",
+            Self::Revert => "PANIC_REASON_REVERT",
+            Self::OutOfGas => "PANIC_REASON_OUT_OF_GAS",
+            Self::TransactionValidity => "PANIC_REASON_TRANSACTION_VALIDITY",
+            Self::MemoryOverflow => "PANIC_REASON_MEMORY_OVERFLOW",
+            Self::ArithmeticOverflow => "PANIC_REASON_ARITHMETIC_OVERFLOW",
+            Self::ContractNotFound => "PANIC_REASON_CONTRACT_NOT_FOUND",
+            Self::MemoryOwnership => "PANIC_REASON_MEMORY_OWNERSHIP",
+            Self::NotEnoughBalance => "PANIC_REASON_NOT_ENOUGH_BALANCE",
+            Self::ExpectedInternalContext => "PANIC_REASON_EXPECTED_INTERNAL_CONTEXT",
+            Self::AssetIdNotFound => "PANIC_REASON_ASSET_ID_NOT_FOUND",
+            Self::InputNotFound => "PANIC_REASON_INPUT_NOT_FOUND",
+            Self::OutputNotFound => "PANIC_REASON_OUTPUT_NOT_FOUND",
+            Self::WitnessNotFound => "PANIC_REASON_WITNESS_NOT_FOUND",
+            Self::TransactionMaturity => "PANIC_REASON_TRANSACTION_MATURITY",
+            Self::InvalidMetadataIdentifier => "PANIC_REASON_INVALID_METADATA_IDENTIFIER",
+            Self::MalformedCallStructure => "PANIC_REASON_MALFORMED_CALL_STRUCTURE",
+            Self::ReservedRegisterNotWritable => {
+                "PANIC_REASON_RESERVED_REGISTER_NOT_WRITABLE"
+            }
+            Self::InvalidFlags => "PANIC_REASON_INVALID_FLAGS",
+            Self::InvalidImmediateValue => "PANIC_REASON_INVALID_IMMEDIATE_VALUE",
+            Self::ExpectedCoinInput => "PANIC_REASON_EXPECTED_COIN_INPUT",
+            Self::EcalError => "PANIC_REASON_ECAL_ERROR",
+            Self::MemoryWriteOverlap => "PANIC_REASON_MEMORY_WRITE_OVERLAP",
+            Self::ContractNotInInputs => "PANIC_REASON_CONTRACT_NOT_IN_INPUTS",
+            Self::InternalBalanceOverflow => "PANIC_REASON_INTERNAL_BALANCE_OVERFLOW",
+            Self::ContractMaxSize => "PANIC_REASON_CONTRACT_MAX_SIZE",
+            Self::ExpectedUnallocatedStack => "PANIC_REASON_EXPECTED_UNALLOCATED_STACK",
+            Self::MaxStaticContractsReached => {
+                "PANIC_REASON_MAX_STATIC_CONTRACTS_REACHED"
+            }
+            Self::TransferAmountCannotBeZero => {
+                "PANIC_REASON_TRANSFER_AMOUNT_CANNOT_BE_ZERO"
+            }
+            Self::ExpectedOutputVariable => "PANIC_REASON_EXPECTED_OUTPUT_VARIABLE",
+            Self::ExpectedParentInternalContext => {
+                "PANIC_REASON_EXPECTED_PARENT_INTERNAL_CONTEXT"
+            }
+            Self::PredicateReturnedNonOne => "PANIC_REASON_PREDICATE_RETURNED_NON_ONE",
+            Self::ContractIdAlreadyDeployed => {
+                "PANIC_REASON_CONTRACT_ID_ALREADY_DEPLOYED"
+            }
+            Self::ContractMismatch => "PANIC_REASON_CONTRACT_MISMATCH",
+            Self::MessageDataTooLong => "PANIC_REASON_MESSAGE_DATA_TOO_LONG",
+            Self::ArithmeticError => "PANIC_REASON_ARITHMETIC_ERROR",
+            Self::ContractInstructionNotAllowed => {
+                "PANIC_REASON_CONTRACT_INSTRUCTION_NOT_ALLOWED"
+            }
+            Self::TransferZeroCoins => "PANIC_REASON_TRANSFER_ZERO_COINS",
+            Self::InvalidInstruction => "PANIC_REASON_INVALID_INSTRUCTION",
+            Self::MemoryNotExecutable => "PANIC_REASON_MEMORY_NOT_EXECUTABLE",
+            Self::PolicyIsNotSet => "PANIC_REASON_POLICY_IS_NOT_SET",
+            Self::PolicyNotFound => "PANIC_REASON_POLICY_NOT_FOUND",
+            Self::TooManyReceipts => "PANIC_REASON_TOO_MANY_RECEIPTS",
+            Self::BalanceOverflow => "PANIC_REASON_BALANCE_OVERFLOW",
+            Self::InvalidBlockHeight => "PANIC_REASON_INVALID_BLOCK_HEIGHT",
+            Self::TooManySlots => "PANIC_REASON_TOO_MANY_SLOTS",
+            Self::ExpectedNestedCaller => "PANIC_REASON_EXPECTED_NESTED_CALLER",
+            Self::MemoryGrowthOverlap => "PANIC_REASON_MEMORY_GROWTH_OVERLAP",
+            Self::UninitalizedMemoryAccess => "PANIC_REASON_UNINITALIZED_MEMORY_ACCESS",
+            Self::OverridingConsensusParameters => {
+                "PANIC_REASON_OVERRIDING_CONSENSUS_PARAMETERS"
+            }
+            Self::UnknownStateTransactionBytecodeRoot => {
+                "PANIC_REASON_UNKNOWN_STATE_TRANSACTION_BYTECODE_ROOT"
+            }
+            Self::OverridingStateTransactionBytecode => {
+                "PANIC_REASON_OVERRIDING_STATE_TRANSACTION_BYTECODE"
+            }
+            Self::BytecodeAlreadyUploaded => "PANIC_REASON_BYTECODE_ALREADY_UPLOADED",
+            Self::ThePartIsNotSequentiallyConnected => {
+                "PANIC_REASON_THE_PART_IS_NOT_SEQUENTIALLY_CONNECTED"
+            }
+            Self::BlobNotFound => "PANIC_REASON_BLOB_NOT_FOUND",
+            Self::BlobIdAlreadyUploaded => "PANIC_REASON_BLOB_ID_ALREADY_UPLOADED",
+            Self::GasCostNotDefined => "PANIC_REASON_GAS_COST_NOT_DEFINED",
+            Self::UnsupportedCurveId => "PANIC_REASON_UNSUPPORTED_CURVE_ID",
+            Self::UnsupportedOperationType => "PANIC_REASON_UNSUPPORTED_OPERATION_TYPE",
+            Self::InvalidEllipticCurvePoint => {
+                "PANIC_REASON_INVALID_ELLIPTIC_CURVE_POINT"
+            }
+            Self::InputContractDoesNotExist => {
+                "PANIC_REASON_INPUT_CONTRACT_DOES_NOT_EXIST"
+            }
+            Self::StorageSlotsNotFound => "PANIC_REASON_STORAGE_SLOTS_NOT_FOUND",
+            Self::ProofInUploadNotFound => "PANIC_REASON_PROOF_IN_UPLOAD_NOT_FOUND",
+            Self::InvalidUpgradePurposeType => {
+                "PANIC_REASON_INVALID_UPGRADE_PURPOSE_TYPE"
+            }
+            Self::CanNotGetGasPriceInPredicate => {
+                "PANIC_REASON_CAN_NOT_GET_GAS_PRICE_IN_PREDICATE"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PANIC_REASON_UNKNOWN" => Some(Self::Unknown),
+            "PANIC_REASON_REVERT" => Some(Self::Revert),
+            "PANIC_REASON_OUT_OF_GAS" => Some(Self::OutOfGas),
+            "PANIC_REASON_TRANSACTION_VALIDITY" => Some(Self::TransactionValidity),
+            "PANIC_REASON_MEMORY_OVERFLOW" => Some(Self::MemoryOverflow),
+            "PANIC_REASON_ARITHMETIC_OVERFLOW" => Some(Self::ArithmeticOverflow),
+            "PANIC_REASON_CONTRACT_NOT_FOUND" => Some(Self::ContractNotFound),
+            "PANIC_REASON_MEMORY_OWNERSHIP" => Some(Self::MemoryOwnership),
+            "PANIC_REASON_NOT_ENOUGH_BALANCE" => Some(Self::NotEnoughBalance),
+            "PANIC_REASON_EXPECTED_INTERNAL_CONTEXT" => {
+                Some(Self::ExpectedInternalContext)
+            }
+            "PANIC_REASON_ASSET_ID_NOT_FOUND" => Some(Self::AssetIdNotFound),
+            "PANIC_REASON_INPUT_NOT_FOUND" => Some(Self::InputNotFound),
+            "PANIC_REASON_OUTPUT_NOT_FOUND" => Some(Self::OutputNotFound),
+            "PANIC_REASON_WITNESS_NOT_FOUND" => Some(Self::WitnessNotFound),
+            "PANIC_REASON_TRANSACTION_MATURITY" => Some(Self::TransactionMaturity),
+            "PANIC_REASON_INVALID_METADATA_IDENTIFIER" => {
+                Some(Self::InvalidMetadataIdentifier)
+            }
+            "PANIC_REASON_MALFORMED_CALL_STRUCTURE" => Some(Self::MalformedCallStructure),
+            "PANIC_REASON_RESERVED_REGISTER_NOT_WRITABLE" => {
+                Some(Self::ReservedRegisterNotWritable)
+            }
+            "PANIC_REASON_INVALID_FLAGS" => Some(Self::InvalidFlags),
+            "PANIC_REASON_INVALID_IMMEDIATE_VALUE" => Some(Self::InvalidImmediateValue),
+            "PANIC_REASON_EXPECTED_COIN_INPUT" => Some(Self::ExpectedCoinInput),
+            "PANIC_REASON_ECAL_ERROR" => Some(Self::EcalError),
+            "PANIC_REASON_MEMORY_WRITE_OVERLAP" => Some(Self::MemoryWriteOverlap),
+            "PANIC_REASON_CONTRACT_NOT_IN_INPUTS" => Some(Self::ContractNotInInputs),
+            "PANIC_REASON_INTERNAL_BALANCE_OVERFLOW" => {
+                Some(Self::InternalBalanceOverflow)
+            }
+            "PANIC_REASON_CONTRACT_MAX_SIZE" => Some(Self::ContractMaxSize),
+            "PANIC_REASON_EXPECTED_UNALLOCATED_STACK" => {
+                Some(Self::ExpectedUnallocatedStack)
+            }
+            "PANIC_REASON_MAX_STATIC_CONTRACTS_REACHED" => {
+                Some(Self::MaxStaticContractsReached)
+            }
+            "PANIC_REASON_TRANSFER_AMOUNT_CANNOT_BE_ZERO" => {
+                Some(Self::TransferAmountCannotBeZero)
+            }
+            "PANIC_REASON_EXPECTED_OUTPUT_VARIABLE" => Some(Self::ExpectedOutputVariable),
+            "PANIC_REASON_EXPECTED_PARENT_INTERNAL_CONTEXT" => {
+                Some(Self::ExpectedParentInternalContext)
+            }
+            "PANIC_REASON_PREDICATE_RETURNED_NON_ONE" => {
+                Some(Self::PredicateReturnedNonOne)
+            }
+            "PANIC_REASON_CONTRACT_ID_ALREADY_DEPLOYED" => {
+                Some(Self::ContractIdAlreadyDeployed)
+            }
+            "PANIC_REASON_CONTRACT_MISMATCH" => Some(Self::ContractMismatch),
+            "PANIC_REASON_MESSAGE_DATA_TOO_LONG" => Some(Self::MessageDataTooLong),
+            "PANIC_REASON_ARITHMETIC_ERROR" => Some(Self::ArithmeticError),
+            "PANIC_REASON_CONTRACT_INSTRUCTION_NOT_ALLOWED" => {
+                Some(Self::ContractInstructionNotAllowed)
+            }
+            "PANIC_REASON_TRANSFER_ZERO_COINS" => Some(Self::TransferZeroCoins),
+            "PANIC_REASON_INVALID_INSTRUCTION" => Some(Self::InvalidInstruction),
+            "PANIC_REASON_MEMORY_NOT_EXECUTABLE" => Some(Self::MemoryNotExecutable),
+            "PANIC_REASON_POLICY_IS_NOT_SET" => Some(Self::PolicyIsNotSet),
+            "PANIC_REASON_POLICY_NOT_FOUND" => Some(Self::PolicyNotFound),
+            "PANIC_REASON_TOO_MANY_RECEIPTS" => Some(Self::TooManyReceipts),
+            "PANIC_REASON_BALANCE_OVERFLOW" => Some(Self::BalanceOverflow),
+            "PANIC_REASON_INVALID_BLOCK_HEIGHT" => Some(Self::InvalidBlockHeight),
+            "PANIC_REASON_TOO_MANY_SLOTS" => Some(Self::TooManySlots),
+            "PANIC_REASON_EXPECTED_NESTED_CALLER" => Some(Self::ExpectedNestedCaller),
+            "PANIC_REASON_MEMORY_GROWTH_OVERLAP" => Some(Self::MemoryGrowthOverlap),
+            "PANIC_REASON_UNINITALIZED_MEMORY_ACCESS" => {
+                Some(Self::UninitalizedMemoryAccess)
+            }
+            "PANIC_REASON_OVERRIDING_CONSENSUS_PARAMETERS" => {
+                Some(Self::OverridingConsensusParameters)
+            }
+            "PANIC_REASON_UNKNOWN_STATE_TRANSACTION_BYTECODE_ROOT" => {
+                Some(Self::UnknownStateTransactionBytecodeRoot)
+            }
+            "PANIC_REASON_OVERRIDING_STATE_TRANSACTION_BYTECODE" => {
+                Some(Self::OverridingStateTransactionBytecode)
+            }
+            "PANIC_REASON_BYTECODE_ALREADY_UPLOADED" => {
+                Some(Self::BytecodeAlreadyUploaded)
+            }
+            "PANIC_REASON_THE_PART_IS_NOT_SEQUENTIALLY_CONNECTED" => {
+                Some(Self::ThePartIsNotSequentiallyConnected)
+            }
+            "PANIC_REASON_BLOB_NOT_FOUND" => Some(Self::BlobNotFound),
+            "PANIC_REASON_BLOB_ID_ALREADY_UPLOADED" => Some(Self::BlobIdAlreadyUploaded),
+            "PANIC_REASON_GAS_COST_NOT_DEFINED" => Some(Self::GasCostNotDefined),
+            "PANIC_REASON_UNSUPPORTED_CURVE_ID" => Some(Self::UnsupportedCurveId),
+            "PANIC_REASON_UNSUPPORTED_OPERATION_TYPE" => {
+                Some(Self::UnsupportedOperationType)
+            }
+            "PANIC_REASON_INVALID_ELLIPTIC_CURVE_POINT" => {
+                Some(Self::InvalidEllipticCurvePoint)
+            }
+            "PANIC_REASON_INPUT_CONTRACT_DOES_NOT_EXIST" => {
+                Some(Self::InputContractDoesNotExist)
+            }
+            "PANIC_REASON_STORAGE_SLOTS_NOT_FOUND" => Some(Self::StorageSlotsNotFound),
+            "PANIC_REASON_PROOF_IN_UPLOAD_NOT_FOUND" => Some(Self::ProofInUploadNotFound),
+            "PANIC_REASON_INVALID_UPGRADE_PURPOSE_TYPE" => {
+                Some(Self::InvalidUpgradePurposeType)
+            }
+            "PANIC_REASON_CAN_NOT_GET_GAS_PRICE_IN_PREDICATE" => {
+                Some(Self::CanNotGetGasPriceInPredicate)
+            }
+            _ => None,
+        }
+    }
+}
 /// Generated client implementations.
 pub mod block_aggregator_client {
     #![allow(

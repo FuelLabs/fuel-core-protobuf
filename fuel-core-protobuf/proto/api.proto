@@ -41,6 +41,7 @@ message Block {
 message V1Block {
   Header header = 1;
   repeated Transaction transactions = 2;
+  repeated Receipt receipts = 3;
 }
 
 message Header {
@@ -407,6 +408,358 @@ message InnerPredicateOffset {
   uint32 length = 2;
 }
 
+
+//pub enum Receipt {
+message Receipt {
+  oneof variant {
+    CallReceipt call = 1;
+    ReturnReceipt return_receipt = 2;
+    ReturnDataReceipt return_data = 3;
+    PanicReceipt panic = 4;
+    RevertReceipt revert = 5;
+    LogReceipt log = 6;
+    LogDataReceipt log_data = 7;
+    TransferReceipt transfer = 8;
+    TransferOutReceipt transfer_out = 9;
+    ScriptResultReceipt script_result = 10;
+    MessageOutReceipt message_out = 11;
+    MintReceipt mint = 12;
+    BurnReceipt burn = 13;
+  }
+}
+//}
+
+//    Call {
+//        id: ContractId,
+//        to: ContractId,
+//        amount: Word,
+//        asset_id: AssetId,
+//        gas: Word,
+//        param1: Word,
+//        param2: Word,
+//        pc: Word,
+//        is: Word,
+//    },
+message CallReceipt {
+  bytes id = 1;
+  bytes to = 2;
+  uint64 amount = 3;
+  bytes asset_id = 4;
+  uint64 gas = 5;
+  uint64 param1 = 6;
+  uint64 param2 = 7;
+  uint64 pc = 8;
+  uint64 is = 9;
+}
+
+//    Return {
+//        id: ContractId,
+//        val: Word,
+//        pc: Word,
+//        is: Word,
+//    },
+message ReturnReceipt {
+  bytes id = 1;
+  uint64 val = 2;
+  uint64 pc = 3;
+  uint64 is = 4;
+}
+
+//    ReturnData {
+//        id: ContractId,
+//        ptr: Word,
+//        len: Word,
+//        digest: Bytes32,
+//        pc: Word,
+//        is: Word,
+//        #[educe(PartialEq(ignore))]
+//        #[educe(Hash(ignore))]
+//        #[canonical(skip)]
+//        data: Option<Bytes>,
+//    },
+message ReturnDataReceipt {
+  bytes id = 1;
+  uint64 ptr = 2;
+  uint64 len = 3;
+  bytes digest = 4;
+  uint64 pc = 5;
+  uint64 is = 6;
+  optional bytes data = 7;
+}
+
+//    Panic {
+//        id: ContractId,
+//        reason: PanicInstruction,
+//        pc: Word,
+//        is: Word,
+//        #[educe(PartialEq(ignore))]
+//        #[educe(Hash(ignore))]
+//        #[canonical(skip)]
+//        contract_id: Option<ContractId>,
+//    },
+message PanicReceipt {
+  bytes id = 1;
+  PanicInstruction reason = 2;
+  uint64 pc = 3;
+  uint64 is = 4;
+  optional bytes contract_id = 5;
+}
+
+//    Revert {
+//        id: ContractId,
+//        ra: Word,
+//        pc: Word,
+//        is: Word,
+//    },
+message RevertReceipt {
+  bytes id = 1;
+  uint64 ra = 2;
+  uint64 pc = 3;
+  uint64 is = 4;
+}
+
+//    Log {
+//        id: ContractId,
+//        ra: Word,
+//        rb: Word,
+//        rc: Word,
+//        rd: Word,
+//        pc: Word,
+//        is: Word,
+//    },
+message LogReceipt {
+  bytes id = 1;
+  uint64 ra = 2;
+  uint64 rb = 3;
+  uint64 rc = 4;
+  uint64 rd = 5;
+  uint64 pc = 6;
+  uint64 is = 7;
+}
+
+//    LogData {
+//        id: ContractId,
+//        ra: Word,
+//        rb: Word,
+//        ptr: Word,
+//        len: Word,
+//        digest: Bytes32,
+//        pc: Word,
+//        is: Word,
+//        #[educe(PartialEq(ignore))]
+//        #[educe(Hash(ignore))]
+//        #[canonical(skip)]
+//        data: Option<Bytes>,
+//    },
+message LogDataReceipt {
+  bytes id = 1;
+  uint64 ra = 2;
+  uint64 rb = 3;
+  uint64 ptr = 4;
+  uint64 len = 5;
+  bytes digest = 6;
+  uint64 pc = 7;
+  uint64 is = 8;
+  optional bytes data = 9;
+}
+
+//    Transfer {
+//        id: ContractId,
+//        to: ContractId,
+//        amount: Word,
+//        asset_id: AssetId,
+//        pc: Word,
+//        is: Word,
+//    },
+message TransferReceipt {
+  bytes id = 1;
+  bytes to = 2;
+  uint64 amount = 3;
+  bytes asset_id = 4;
+  uint64 pc = 5;
+  uint64 is = 6;
+}
+
+//    TransferOut {
+//        id: ContractId,
+//        to: Address,
+//        amount: Word,
+//        asset_id: AssetId,
+//        pc: Word,
+//        is: Word,
+//    },
+message TransferOutReceipt {
+  bytes id = 1;
+  bytes to = 2;
+  uint64 amount = 3;
+  bytes asset_id = 4;
+  uint64 pc = 5;
+  uint64 is = 6;
+}
+
+//    ScriptResult {
+//        result: ScriptExecutionResult,
+//        gas_used: Word,
+//    },
+message ScriptResultReceipt {
+  ScriptExecutionResult result = 1;
+  uint64 gas_used = 2;
+}
+
+//    MessageOut {
+//        sender: Address,
+//        recipient: Address,
+//        amount: Word,
+//        nonce: Nonce,
+//        len: Word,
+//        digest: Bytes32,
+//        #[educe(PartialEq(ignore))]
+//        #[educe(Hash(ignore))]
+//        #[canonical(skip)]
+//        data: Option<Bytes>,
+//    },
+message MessageOutReceipt {
+  bytes sender = 1;
+  bytes recipient = 2;
+  uint64 amount = 3;
+  bytes nonce = 4;
+  uint64 len = 5;
+  bytes digest = 6;
+  optional bytes data = 7;
+}
+
+//    Mint {
+//        sub_id: SubAssetId,
+//        contract_id: ContractId,
+//        val: Word,
+//        pc: Word,
+//        is: Word,
+//    },
+message MintReceipt {
+  bytes sub_id = 1;
+  bytes contract_id = 2;
+  uint64 val = 3;
+  uint64 pc = 4;
+  uint64 is = 5;
+}
+
+//    Burn {
+//        sub_id: SubAssetId,
+//        contract_id: ContractId,
+//        val: Word,
+//        pc: Word,
+//        is: Word,
+//    },
+message BurnReceipt {
+  bytes sub_id = 1;
+  bytes contract_id = 2;
+  uint64 val = 3;
+  uint64 pc = 4;
+  uint64 is = 5;
+}
+
+// pub struct PanicInstruction {
+//     reason: PanicReason,
+//     instruction: RawInstruction,
+// }
+message PanicInstruction {
+  PanicReason reason = 1;
+  uint32 instruction = 2;
+}
+
+enum PanicReason {
+  PANIC_REASON_UNKNOWN = 0;
+  PANIC_REASON_REVERT = 1;
+  PANIC_REASON_OUT_OF_GAS = 2;
+  PANIC_REASON_TRANSACTION_VALIDITY = 3;
+  PANIC_REASON_MEMORY_OVERFLOW = 4;
+  PANIC_REASON_ARITHMETIC_OVERFLOW = 5;
+  PANIC_REASON_CONTRACT_NOT_FOUND = 6;
+  PANIC_REASON_MEMORY_OWNERSHIP = 7;
+  PANIC_REASON_NOT_ENOUGH_BALANCE = 8;
+  PANIC_REASON_EXPECTED_INTERNAL_CONTEXT = 9;
+  PANIC_REASON_ASSET_ID_NOT_FOUND = 10;
+  PANIC_REASON_INPUT_NOT_FOUND = 11;
+  PANIC_REASON_OUTPUT_NOT_FOUND = 12;
+  PANIC_REASON_WITNESS_NOT_FOUND = 13;
+  PANIC_REASON_TRANSACTION_MATURITY = 14;
+  PANIC_REASON_INVALID_METADATA_IDENTIFIER = 15;
+  PANIC_REASON_MALFORMED_CALL_STRUCTURE = 16;
+  PANIC_REASON_RESERVED_REGISTER_NOT_WRITABLE = 17;
+  PANIC_REASON_INVALID_FLAGS = 18;
+  PANIC_REASON_INVALID_IMMEDIATE_VALUE = 19;
+  PANIC_REASON_EXPECTED_COIN_INPUT = 20;
+  PANIC_REASON_ECAL_ERROR = 21;
+  PANIC_REASON_MEMORY_WRITE_OVERLAP = 22;
+  PANIC_REASON_CONTRACT_NOT_IN_INPUTS = 23;
+  PANIC_REASON_INTERNAL_BALANCE_OVERFLOW = 24;
+  PANIC_REASON_CONTRACT_MAX_SIZE = 25;
+  PANIC_REASON_EXPECTED_UNALLOCATED_STACK = 26;
+  PANIC_REASON_MAX_STATIC_CONTRACTS_REACHED = 27;
+  PANIC_REASON_TRANSFER_AMOUNT_CANNOT_BE_ZERO = 28;
+  PANIC_REASON_EXPECTED_OUTPUT_VARIABLE = 29;
+  PANIC_REASON_EXPECTED_PARENT_INTERNAL_CONTEXT = 30;
+  PANIC_REASON_PREDICATE_RETURNED_NON_ONE = 31;
+  PANIC_REASON_CONTRACT_ID_ALREADY_DEPLOYED = 32;
+  PANIC_REASON_CONTRACT_MISMATCH = 33;
+  PANIC_REASON_MESSAGE_DATA_TOO_LONG = 34;
+  PANIC_REASON_ARITHMETIC_ERROR = 35;
+  PANIC_REASON_CONTRACT_INSTRUCTION_NOT_ALLOWED = 36;
+  PANIC_REASON_TRANSFER_ZERO_COINS = 37;
+  PANIC_REASON_INVALID_INSTRUCTION = 38;
+  PANIC_REASON_MEMORY_NOT_EXECUTABLE = 39;
+  PANIC_REASON_POLICY_IS_NOT_SET = 40;
+  PANIC_REASON_POLICY_NOT_FOUND = 41;
+  PANIC_REASON_TOO_MANY_RECEIPTS = 42;
+  PANIC_REASON_BALANCE_OVERFLOW = 43;
+  PANIC_REASON_INVALID_BLOCK_HEIGHT = 44;
+  PANIC_REASON_TOO_MANY_SLOTS = 45;
+  PANIC_REASON_EXPECTED_NESTED_CALLER = 46;
+  PANIC_REASON_MEMORY_GROWTH_OVERLAP = 47;
+  PANIC_REASON_UNINITALIZED_MEMORY_ACCESS = 48;
+  PANIC_REASON_OVERRIDING_CONSENSUS_PARAMETERS = 49;
+  PANIC_REASON_UNKNOWN_STATE_TRANSACTION_BYTECODE_ROOT = 50;
+  PANIC_REASON_OVERRIDING_STATE_TRANSACTION_BYTECODE = 51;
+  PANIC_REASON_BYTECODE_ALREADY_UPLOADED = 52;
+  PANIC_REASON_THE_PART_IS_NOT_SEQUENTIALLY_CONNECTED = 53;
+  PANIC_REASON_BLOB_NOT_FOUND = 54;
+  PANIC_REASON_BLOB_ID_ALREADY_UPLOADED = 55;
+  PANIC_REASON_GAS_COST_NOT_DEFINED = 56;
+  PANIC_REASON_UNSUPPORTED_CURVE_ID = 57;
+  PANIC_REASON_UNSUPPORTED_OPERATION_TYPE = 58;
+  PANIC_REASON_INVALID_ELLIPTIC_CURVE_POINT = 59;
+  PANIC_REASON_INPUT_CONTRACT_DOES_NOT_EXIST = 60;
+  PANIC_REASON_STORAGE_SLOTS_NOT_FOUND = 61;
+  PANIC_REASON_PROOF_IN_UPLOAD_NOT_FOUND = 62;
+  PANIC_REASON_INVALID_UPGRADE_PURPOSE_TYPE = 63;
+  PANIC_REASON_CAN_NOT_GET_GAS_PRICE_IN_PREDICATE = 64;
+}
+
+// pub enum ScriptExecutionResult {
+//     Success,
+//     Revert,
+//     Panic,
+//     GenericFailure(u64),
+// }
+message ScriptExecutionResult {
+  oneof variant {
+    ScriptExecutionResultSuccess success = 1;
+    ScriptExecutionResultRevert revert = 2;
+    ScriptExecutionResultPanic panic = 3;
+    ScriptExecutionResultGenericFailure generic_failure = 4;
+  }
+}
+
+message ScriptExecutionResultSuccess {}
+
+message ScriptExecutionResultRevert {}
+
+message ScriptExecutionResultPanic {}
+
+// ScriptExecutionResult::GenericFailure(u64)
+message ScriptExecutionResultGenericFailure {
+  uint64 code = 1;
+}
 
 message BlockResponse {
   uint32 height = 1;
