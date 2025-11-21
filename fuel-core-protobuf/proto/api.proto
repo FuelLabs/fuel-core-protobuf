@@ -408,8 +408,6 @@ message InnerPredicateOffset {
   uint32 length = 2;
 }
 
-
-//pub enum Receipt {
 message Receipt {
   oneof variant {
     CallReceipt call = 1;
@@ -427,19 +425,7 @@ message Receipt {
     BurnReceipt burn = 13;
   }
 }
-//}
 
-//    Call {
-//        id: ContractId,
-//        to: ContractId,
-//        amount: Word,
-//        asset_id: AssetId,
-//        gas: Word,
-//        param1: Word,
-//        param2: Word,
-//        pc: Word,
-//        is: Word,
-//    },
 message CallReceipt {
   bytes id = 1;
   bytes to = 2;
@@ -452,12 +438,6 @@ message CallReceipt {
   uint64 is = 9;
 }
 
-//    Return {
-//        id: ContractId,
-//        val: Word,
-//        pc: Word,
-//        is: Word,
-//    },
 message ReturnReceipt {
   bytes id = 1;
   uint64 val = 2;
@@ -465,18 +445,6 @@ message ReturnReceipt {
   uint64 is = 4;
 }
 
-//    ReturnData {
-//        id: ContractId,
-//        ptr: Word,
-//        len: Word,
-//        digest: Bytes32,
-//        pc: Word,
-//        is: Word,
-//        #[educe(PartialEq(ignore))]
-//        #[educe(Hash(ignore))]
-//        #[canonical(skip)]
-//        data: Option<Bytes>,
-//    },
 message ReturnDataReceipt {
   bytes id = 1;
   uint64 ptr = 2;
@@ -487,16 +455,6 @@ message ReturnDataReceipt {
   optional bytes data = 7;
 }
 
-//    Panic {
-//        id: ContractId,
-//        reason: PanicInstruction,
-//        pc: Word,
-//        is: Word,
-//        #[educe(PartialEq(ignore))]
-//        #[educe(Hash(ignore))]
-//        #[canonical(skip)]
-//        contract_id: Option<ContractId>,
-//    },
 message PanicReceipt {
   bytes id = 1;
   PanicInstruction reason = 2;
@@ -505,12 +463,6 @@ message PanicReceipt {
   optional bytes contract_id = 5;
 }
 
-//    Revert {
-//        id: ContractId,
-//        ra: Word,
-//        pc: Word,
-//        is: Word,
-//    },
 message RevertReceipt {
   bytes id = 1;
   uint64 ra = 2;
@@ -518,15 +470,6 @@ message RevertReceipt {
   uint64 is = 4;
 }
 
-//    Log {
-//        id: ContractId,
-//        ra: Word,
-//        rb: Word,
-//        rc: Word,
-//        rd: Word,
-//        pc: Word,
-//        is: Word,
-//    },
 message LogReceipt {
   bytes id = 1;
   uint64 ra = 2;
@@ -537,20 +480,6 @@ message LogReceipt {
   uint64 is = 7;
 }
 
-//    LogData {
-//        id: ContractId,
-//        ra: Word,
-//        rb: Word,
-//        ptr: Word,
-//        len: Word,
-//        digest: Bytes32,
-//        pc: Word,
-//        is: Word,
-//        #[educe(PartialEq(ignore))]
-//        #[educe(Hash(ignore))]
-//        #[canonical(skip)]
-//        data: Option<Bytes>,
-//    },
 message LogDataReceipt {
   bytes id = 1;
   uint64 ra = 2;
@@ -563,14 +492,6 @@ message LogDataReceipt {
   optional bytes data = 9;
 }
 
-//    Transfer {
-//        id: ContractId,
-//        to: ContractId,
-//        amount: Word,
-//        asset_id: AssetId,
-//        pc: Word,
-//        is: Word,
-//    },
 message TransferReceipt {
   bytes id = 1;
   bytes to = 2;
@@ -580,14 +501,6 @@ message TransferReceipt {
   uint64 is = 6;
 }
 
-//    TransferOut {
-//        id: ContractId,
-//        to: Address,
-//        amount: Word,
-//        asset_id: AssetId,
-//        pc: Word,
-//        is: Word,
-//    },
 message TransferOutReceipt {
   bytes id = 1;
   bytes to = 2;
@@ -597,27 +510,11 @@ message TransferOutReceipt {
   uint64 is = 6;
 }
 
-//    ScriptResult {
-//        result: ScriptExecutionResult,
-//        gas_used: Word,
-//    },
 message ScriptResultReceipt {
   ScriptExecutionResult result = 1;
   uint64 gas_used = 2;
 }
 
-//    MessageOut {
-//        sender: Address,
-//        recipient: Address,
-//        amount: Word,
-//        nonce: Nonce,
-//        len: Word,
-//        digest: Bytes32,
-//        #[educe(PartialEq(ignore))]
-//        #[educe(Hash(ignore))]
-//        #[canonical(skip)]
-//        data: Option<Bytes>,
-//    },
 message MessageOutReceipt {
   bytes sender = 1;
   bytes recipient = 2;
@@ -628,13 +525,6 @@ message MessageOutReceipt {
   optional bytes data = 7;
 }
 
-//    Mint {
-//        sub_id: SubAssetId,
-//        contract_id: ContractId,
-//        val: Word,
-//        pc: Word,
-//        is: Word,
-//    },
 message MintReceipt {
   bytes sub_id = 1;
   bytes contract_id = 2;
@@ -643,13 +533,6 @@ message MintReceipt {
   uint64 is = 5;
 }
 
-//    Burn {
-//        sub_id: SubAssetId,
-//        contract_id: ContractId,
-//        val: Word,
-//        pc: Word,
-//        is: Word,
-//    },
 message BurnReceipt {
   bytes sub_id = 1;
   bytes contract_id = 2;
@@ -658,10 +541,6 @@ message BurnReceipt {
   uint64 is = 5;
 }
 
-// pub struct PanicInstruction {
-//     reason: PanicReason,
-//     instruction: RawInstruction,
-// }
 message PanicInstruction {
   PanicReason reason = 1;
   uint32 instruction = 2;
