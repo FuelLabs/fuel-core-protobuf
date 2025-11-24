@@ -825,7 +825,6 @@ pub struct InnerPredicateOffset {
     #[prost(uint32, tag = "2")]
     pub length: u32,
 }
-/// pub enum Receipt {
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -870,20 +869,6 @@ pub mod receipt {
         Burn(super::BurnReceipt),
     }
 }
-///
-/// ```text
-/// Call {
-///     id: ContractId,
-///     to: ContractId,
-///     amount: Word,
-///     asset_id: AssetId,
-///     gas: Word,
-///     param1: Word,
-///     param2: Word,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -907,15 +892,6 @@ pub struct CallReceipt {
     #[prost(uint64, tag = "9")]
     pub is: u64,
 }
-///
-/// ```text
-/// Return {
-///     id: ContractId,
-///     val: Word,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -929,21 +905,6 @@ pub struct ReturnReceipt {
     #[prost(uint64, tag = "4")]
     pub is: u64,
 }
-///
-/// ```text
-/// ReturnData {
-///     id: ContractId,
-///     ptr: Word,
-///     len: Word,
-///     digest: Bytes32,
-///     pc: Word,
-///     is: Word,
-///     #\[educe(PartialEq(ignore))\]
-///     #\[educe(Hash(ignore))\]
-///     #\[canonical(skip)\]
-///     data: Option<Bytes>,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -963,19 +924,6 @@ pub struct ReturnDataReceipt {
     #[prost(bytes = "vec", optional, tag = "7")]
     pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
-///
-/// ```text
-/// Panic {
-///     id: ContractId,
-///     reason: PanicInstruction,
-///     pc: Word,
-///     is: Word,
-///     #\[educe(PartialEq(ignore))\]
-///     #\[educe(Hash(ignore))\]
-///     #\[canonical(skip)\]
-///     contract_id: Option<ContractId>,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -991,15 +939,6 @@ pub struct PanicReceipt {
     #[prost(bytes = "vec", optional, tag = "5")]
     pub contract_id: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
-///
-/// ```text
-/// Revert {
-///     id: ContractId,
-///     ra: Word,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1013,18 +952,6 @@ pub struct RevertReceipt {
     #[prost(uint64, tag = "4")]
     pub is: u64,
 }
-///
-/// ```text
-/// Log {
-///     id: ContractId,
-///     ra: Word,
-///     rb: Word,
-///     rc: Word,
-///     rd: Word,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1044,23 +971,6 @@ pub struct LogReceipt {
     #[prost(uint64, tag = "7")]
     pub is: u64,
 }
-///
-/// ```text
-/// LogData {
-///     id: ContractId,
-///     ra: Word,
-///     rb: Word,
-///     ptr: Word,
-///     len: Word,
-///     digest: Bytes32,
-///     pc: Word,
-///     is: Word,
-///     #\[educe(PartialEq(ignore))\]
-///     #\[educe(Hash(ignore))\]
-///     #\[canonical(skip)\]
-///     data: Option<Bytes>,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1084,17 +994,6 @@ pub struct LogDataReceipt {
     #[prost(bytes = "vec", optional, tag = "9")]
     pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
-///
-/// ```text
-/// Transfer {
-///     id: ContractId,
-///     to: ContractId,
-///     amount: Word,
-///     asset_id: AssetId,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1112,17 +1011,6 @@ pub struct TransferReceipt {
     #[prost(uint64, tag = "6")]
     pub is: u64,
 }
-///
-/// ```text
-/// TransferOut {
-///     id: ContractId,
-///     to: Address,
-///     amount: Word,
-///     asset_id: AssetId,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1140,13 +1028,6 @@ pub struct TransferOutReceipt {
     #[prost(uint64, tag = "6")]
     pub is: u64,
 }
-///
-/// ```text
-/// ScriptResult {
-///     result: ScriptExecutionResult,
-///     gas_used: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1156,21 +1037,6 @@ pub struct ScriptResultReceipt {
     #[prost(uint64, tag = "2")]
     pub gas_used: u64,
 }
-///
-/// ```text
-/// MessageOut {
-///     sender: Address,
-///     recipient: Address,
-///     amount: Word,
-///     nonce: Nonce,
-///     len: Word,
-///     digest: Bytes32,
-///     #\[educe(PartialEq(ignore))\]
-///     #\[educe(Hash(ignore))\]
-///     #\[canonical(skip)\]
-///     data: Option<Bytes>,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1190,16 +1056,6 @@ pub struct MessageOutReceipt {
     #[prost(bytes = "vec", optional, tag = "7")]
     pub data: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
 }
-///
-/// ```text
-/// Mint {
-///     sub_id: SubAssetId,
-///     contract_id: ContractId,
-///     val: Word,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1215,16 +1071,6 @@ pub struct MintReceipt {
     #[prost(uint64, tag = "5")]
     pub is: u64,
 }
-///
-/// ```text
-/// Burn {
-///     sub_id: SubAssetId,
-///     contract_id: ContractId,
-///     val: Word,
-///     pc: Word,
-///     is: Word,
-/// },
-/// ```
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1240,10 +1086,6 @@ pub struct BurnReceipt {
     #[prost(uint64, tag = "5")]
     pub is: u64,
 }
-/// pub struct PanicInstruction {
-/// reason: PanicReason,
-/// instruction: RawInstruction,
-/// }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
