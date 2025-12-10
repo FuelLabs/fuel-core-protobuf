@@ -3,7 +3,6 @@ use std::{
     path::PathBuf,
     process::exit,
 };
-use tonic_prost_build::Config;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let mut args = std::env::args().skip(1);
@@ -29,14 +28,11 @@ fn regen_protos() -> Result<(), Box<dyn Error>> {
 
     println!("Regenerating protobufs into {}", out_dir.display());
 
-    let mut config = Config::new();
-    config
-        .type_attribute(".", "#[derive(serde::Serialize,serde::Deserialize)]")
-        .type_attribute(".", "#[allow(clippy::large_enum_variant)]");
-
     tonic_prost_build::configure()
+        .type_attribute(".", "#[derive(serde::Serialize,serde::Deserialize)]")
+        .type_attribute(".", "#[allow(clippy::large_enum_variant)]")
         .out_dir(&out_dir)
-        .compile_with_config(config, &[proto_dir.join("api.proto")], &[proto_dir])?;
+        .compile_protos(&[proto_dir.join("api.proto")], &[proto_dir])?;
 
     patch_block_response_payload(out_dir.join("blockaggregator.rs"))?;
 
