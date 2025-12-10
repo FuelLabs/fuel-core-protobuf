@@ -83,13 +83,20 @@ pub mod block {
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Receipts {
+    #[prost(message, repeated, tag = "1")]
+    pub receipts: ::prost::alloc::vec::Vec<Receipt>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct V1Block {
     #[prost(message, optional, tag = "1")]
     pub header: ::core::option::Option<Header>,
     #[prost(message, repeated, tag = "2")]
     pub transactions: ::prost::alloc::vec::Vec<Transaction>,
     #[prost(message, repeated, tag = "3")]
-    pub receipts: ::prost::alloc::vec::Vec<Receipt>,
+    pub receipts: ::prost::alloc::vec::Vec<Receipts>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]

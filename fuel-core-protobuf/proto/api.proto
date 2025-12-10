@@ -38,10 +38,14 @@ message Block {
   }
 }
 
+message Receipts {
+  repeated Receipt receipts = 1;
+}
+
 message V1Block {
   Header header = 1;
   repeated Transaction transactions = 2;
-  repeated Receipt receipts = 3;
+  repeated Receipts receipts = 3;
 }
 
 message Header {
