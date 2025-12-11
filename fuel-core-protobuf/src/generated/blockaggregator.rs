@@ -83,13 +83,20 @@ pub mod block {
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Receipts {
+    #[prost(message, repeated, tag = "1")]
+    pub receipts: ::prost::alloc::vec::Vec<Receipt>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::large_enum_variant)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct V1Block {
     #[prost(message, optional, tag = "1")]
     pub header: ::core::option::Option<Header>,
     #[prost(message, repeated, tag = "2")]
     pub transactions: ::prost::alloc::vec::Vec<Transaction>,
     #[prost(message, repeated, tag = "3")]
-    pub receipts: ::prost::alloc::vec::Vec<Receipt>,
+    pub receipts: ::prost::alloc::vec::Vec<Receipts>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::large_enum_variant)]
@@ -1150,7 +1157,7 @@ pub struct ScriptExecutionResultGenericFailure {
 pub struct BlockResponse {
     #[prost(uint32, tag = "1")]
     pub height: u32,
-    #[prost(oneof = "block_response::Payload", tags = "2, 3")]
+    #[prost(oneof = "block_response::Payload", tags = "2, 3, 4")]
     pub payload: ::core::option::Option<block_response::Payload>,
 }
 /// Nested message and enum types in `BlockResponse`.
@@ -1161,7 +1168,9 @@ pub mod block_response {
     pub enum Payload {
         #[prost(message, tag = "2")]
         Literal(super::Block),
-        #[prost(message, tag = "3")]
+        #[prost(bytes, tag = "3")]
+        Bytes(::prost::alloc::vec::Vec<u8>),
+        #[prost(message, tag = "4")]
         Remote(super::RemoteBlockResponse),
     }
 }
