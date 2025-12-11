@@ -1157,7 +1157,7 @@ pub struct ScriptExecutionResultGenericFailure {
 pub struct BlockResponse {
     #[prost(uint32, tag = "1")]
     pub height: u32,
-    #[prost(oneof = "block_response::Payload", tags = "2, 3")]
+    #[prost(oneof = "block_response::Payload", tags = "2, 3, 4")]
     pub payload: ::core::option::Option<block_response::Payload>,
 }
 /// Nested message and enum types in `BlockResponse`.
@@ -1168,7 +1168,9 @@ pub mod block_response {
     pub enum Payload {
         #[prost(message, tag = "2")]
         Literal(super::Block),
-        #[prost(message, tag = "3")]
+        #[prost(bytes, tag = "3")]
+        Bytes(::prost::alloc::vec::Vec<u8>),
+        #[prost(message, tag = "4")]
         Remote(super::RemoteBlockResponse),
     }
 }

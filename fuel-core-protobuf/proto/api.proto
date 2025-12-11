@@ -648,7 +648,8 @@ message BlockResponse {
   uint32 height = 1;
   oneof payload {
     Block literal = 2;
-    RemoteBlockResponse remote = 3;
+    bytes bytes = 3;
+    RemoteBlockResponse remote = 4;
   }
 }
 
