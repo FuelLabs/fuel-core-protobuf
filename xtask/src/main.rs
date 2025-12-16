@@ -34,6 +34,7 @@ fn regen_protos() -> Result<(), Box<dyn Error>> {
         .out_dir(out_dir)
         .compile_protos(&[proto_dir.join("api.proto")], &[proto_dir])?;
 
+
     Ok(())
 }
 
