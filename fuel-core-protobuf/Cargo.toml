@@ -4,7 +4,7 @@ name = "fuel-core-protobuf"
 description = "Protobuf definitions for Fuel Core components"
 keywords = ["fuel", "fuel-core", "protobuf", "vm"]
 repository = "https://github.com/FuelLabs/fuel-core-protobuf"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2024"
 license = "BUSL-1.1"
 
